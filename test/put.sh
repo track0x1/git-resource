@@ -523,21 +523,21 @@ it_will_fail_put_with_conflicting_tag_and_not_force_push() {
   test "$(git -C $repo1 rev-parse some-only-tag)" = $expected_ref
 }
 
-run it_can_put_to_url
-run it_returns_branch_in_metadata
-run it_can_put_to_url_with_tag
-run it_can_put_to_url_with_tag_and_prefix
-run it_can_put_to_url_with_tag_and_annotation
-run it_can_put_to_url_with_notes
-run it_can_put_to_url_with_rebase_with_notes
-run it_can_put_to_url_with_rebase
-run it_can_put_to_url_with_rebase_with_tag
-run it_can_put_to_url_with_rebase_with_tag_and_prefix
-run it_will_fail_put_if_merge_and_rebase_are_set
-run it_can_put_to_url_with_merge_commit
-run it_can_put_to_url_with_only_tag
-run it_can_put_and_set_git_config
-run it_will_fail_put_if_conflicts_and_not_force_push
-run it_can_put_and_force_the_push
-run it_can_put_to_url_with_only_tag_and_force_the_push
-run it_will_fail_put_with_conflicting_tag_and_not_force_push
+# run it_can_put_to_url
+# run it_returns_branch_in_metadata
+# run it_can_put_to_url_with_tag
+# run it_can_put_to_url_with_tag_and_prefix
+# run it_can_put_to_url_with_tag_and_annotation
+# run it_can_put_to_url_with_notes
+# run it_can_put_to_url_with_rebase_with_notes
+# run it_can_put_to_url_with_rebase
+# run it_can_put_to_url_with_rebase_with_tag
+# run it_can_put_to_url_with_rebase_with_tag_and_prefix
+# run it_will_fail_put_if_merge_and_rebase_are_set
+# run it_can_put_to_url_with_merge_commit
+# run it_can_put_to_url_with_only_tag
+# run it_can_put_and_set_git_config
+# run it_will_fail_put_if_conflicts_and_not_force_push
+# run it_can_put_and_force_the_push
+# run it_can_put_to_url_with_only_tag_and_force_the_push
+# run it_will_fail_put_with_conflicting_tag_and_not_force_push

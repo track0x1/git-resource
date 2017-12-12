@@ -30,6 +30,10 @@ configure_credentials $payload
 uri=$(jq -r '.source.uri // ""' < $payload)
 branch=$(jq -r '.source.branch // ""' < $payload)
 git_config_payload=$(jq -r '.source.git_config // []' < $payload)
+skip_ci_disabled=$(jq -r '.source.disable_ci_skip // false' < $payload)
+ignore_user=$(jq -r '.source.ignore_user // ""' < $payload)
+paths="$(jq -r '(.source.paths // ["."])[]' < $payload)" # those "'s are important
+ignore_paths="$(jq -r '":!" + (.source.ignore_paths // [])[]' < $payload)" # these ones too
 repository=$(jq -r '.params.repository // ""' < $payload)
 tag=$(jq -r '.params.tag // ""' < $payload)
 tag_prefix=$(jq -r '.params.tag_prefix // ""' < $payload)
@@ -85,6 +89,25 @@ if [ -n "$annotation_file" ]; then
 fi
 
 cd $repository
+
+if [ "$paths" = "." ] && [ -z "$ignore_paths" ]; then
+  paths_search=""
+else
+  paths_search="-- $paths $ignore_paths"
+fi
+
+ci_skip=""
+if [ "$skip_ci_disabled" != "true" ]; then
+  ci_skip="--grep \\[ci\\sskip\\] --grep \\[skip\\sci\\] --invert-grep"
+fi
+
+# this way we avoid triggering a job again with our automated changes. (cyclical pattern)
+properCommit="$(git rev-parse HEAD)"
+if [ -n "$ignore_user" ]; then
+  echo "Pushing commit: $(git rev-parse HEAD)"
+  echo "Avoiding retriggering of this job with our automated changes– returning ref of original commit."
+  properCommit=$(git log $ci_skip --format='%H %an' --first-parent $paths_search | grep -v "$ignore_user" | cut -f1 -d ' ' | head -1)
+fi
 
 tag() {
   if [ -n "$tag_name" ]; then
@@ -192,6 +215,6 @@ else
 fi
 
 jq -n "{
-  version: {ref: $(git rev-parse HEAD | jq -R .)},
+  version: {ref: $(echo $properCommit | jq -R .)},
   metadata: $(git_metadata)
 }" >&3
